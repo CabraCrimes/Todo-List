@@ -1,9 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const Home = () => {
 const [isTodo, setTodo] = useState("")
 const [isArrayTodo, setArrayTodo] = useState([])
 
+	useEffect(()=> {
+		getTodo()
+	},[])
+
+	useEffect(()=> {
+		addTodo()
+	},[isArrayTodo])
+
+	const getTodo = async () => {
+		const response = await fetch("https://assets.breatheco.de/apis/fake/todos/user/benalexander123")
+		const data = await response.json();
+		setArrayTodo(data)
+
+	}
+
+	const addTodo = async () => {
+		await fetch("https://assets.breatheco.de/apis/fake/todos/user/benalexander123", {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify(isArrayTodo)
+	  })
+	};
 
 	return(
 		<div className="container vh-100 text-center">
@@ -16,16 +40,18 @@ const [isArrayTodo, setArrayTodo] = useState([])
 			onChange={e=> {setTodo(e.target.value) }}
 			onKeyUp={e=> {
 				if ( e.key === "Enter"){
-				setArrayTodo([...isArrayTodo, isTodo]);
+				setArrayTodo([...isArrayTodo, {label : isTodo, done: false}]);
 				setTodo("")}}}
 			/>
 
-			 {/* // When using map we creat a new array. The newisTodo is the new array element. */}
+		
 		<ul className={isArrayTodo.length === 0 ? "" : `list-group shadow p-3 bg-body-tertiary rounded`}>
 			{isArrayTodo.map((newisTodo, index) => {
-				return  <li className="list-group-item p-2 d-flex justify-content-center rounded" key={index}>{newisTodo}<i className=" position-absolute top-0 end-0 p-2 fa-solid fa-xmark" 
-					onClick={() => setArrayTodo(isArrayTodo.filter((el, newIndex) => {
-						return newIndex != index}))
+				return  <li className="list-group-item p-2 d-flex justify-content-center rounded" 
+					key={index}>{newisTodo.label}<i className=" position-absolute top-0 end-0 p-2 fa-solid fa-xmark" 
+
+						onClick={() => setArrayTodo(isArrayTodo.filter((el, newIndex) => {
+							return newIndex != index}))
 				}>
 					</i>
 						</li>})}
