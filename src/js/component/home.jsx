@@ -37,7 +37,7 @@ const [isArrayTodo, setArrayTodo] = useState([])
 		<input className="shadow p-3 mb-5 bg-body-tertiary rounded mt-3 w-50" type="text" 
 			placeholder="Type here..."  
 			value={isTodo} 
-			onChange={e=> {setTodo(e.target.value) }}
+			onChange={e=> {setTodo(e.target.value)}}
 			onKeyUp={e=> {
 				if ( e.key === "Enter"){
 				setArrayTodo([...isArrayTodo, {label : isTodo, done: false}]);
